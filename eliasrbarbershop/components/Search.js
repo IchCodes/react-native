@@ -36,6 +36,20 @@ class Search extends React.Component {
         }
     }
 
+    _searchFilms() {
+        this.page = 0
+        this.totalPages = 0
+        this.setState({
+          films: []
+        }, () => {
+            // J'utilise la paramètre length sur mon tableau de films pour vérifier qu'il y a bien 0 film
+        console.log("Page : " + this.page + " / TotalPages : " + this.totalPages + " / Nombre de films : " + this.state.films.length)
+      
+        this._loadFilms()
+        })
+        
+      }
+
     _displayLoading() {
         if (this.state.isLoading) {
             return (
@@ -54,11 +68,11 @@ class Search extends React.Component {
                     placeholder='Titre du film'
                     style={styles.textinput}
                     onChangeText={(text) => this._searchTextInputChanged(text)}
-                    onSubmitEditing={() => this._loadFilms()}
+                    onSubmitEditing={() => this._searchFilms()}
                 />
                 <Button
                     title='Rechercher'
-                    onPress={() => this._loadFilms()}
+                    onPress={() => this._searchFilms()}
                 />
                 <FlatList
                     data={this.state.films}
