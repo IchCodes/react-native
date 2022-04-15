@@ -9,24 +9,30 @@ class Search extends React.Component {
 
     constructor(props) {
         super(props)
+        this.page = 0;
+        this.totalPages = 0;
+        this.searchedText = "";
         this.state = {
             films: [],
             isLoading: false
         }
-        this.searchedText = ""
     }
 
     _searchTextInputChanged(text) {
         this.searchedText = text
     }
     _loadFilms() {
-        this.setState({ isLoading: true })
-        if(this.searchedText.length >0){
-            getFilmsFromApiWithSearchedText(this.searchedText).then(data => 
-                this.setState({ 
-                    films: data.results,
+
+        if (this.searchedText.length > 0) {
+            this.setState({ isLoading: true })
+            getFilmsFromApiWithSearchedText(this.searchedText, this.page+1).then(data =>{
+                this.page = data.page
+                this.totalPages = data.total_pages
+                this.setState({
+                    films: [... this.state.films, ...data.results],
                     isLoading: false
-                }));
+                })
+            });
         }
     }
 
@@ -46,14 +52,14 @@ class Search extends React.Component {
 
     _displayLoading() {
         if (this.state.isLoading) {
-          return (
-            <View style={styles.loading_container}>
-              <ActivityIndicator size='large' />
-              {/* Le component ActivityIndicator possède une propriété size pour définir la taille du visuel de chargement : small ou large. Par défaut size vaut small, on met donc large pour que le chargement soit bien visible */}
-            </View>
-          )
+            return (
+                <View style={styles.loading_container}>
+                    <ActivityIndicator size='large' />
+                    {/* Le component ActivityIndicator possède une propriété size pour définir la taille du visuel de chargement : small ou large. Par défaut size vaut small, on met donc large pour que le chargement soit bien visible */}
+                </View>
+            )
         }
-      }
+    }
     render() {
         console.log(this.state.isLoading);
         return (
@@ -71,6 +77,13 @@ class Search extends React.Component {
                 <FlatList
                     data={this.state.films}
                     keyExtractor={(item) => item.id.toString()}
+                    onEndReachedThreshold={0.5}
+                    onEndReached={() => {
+                        console.log("onEndReached")
+                        if (this.page < this.totalPages) {
+                            this._loadFilms()
+                        }
+                    }}
                     renderItem={({ item }) => <FilmItem film={item} />}
                 />
                 {this._displayLoading()}
@@ -100,7 +113,7 @@ const styles = StyleSheet.create({
         bottom: 0,
         alignItems: 'center',
         justifyContent: 'center'
-      }
+    }
 })
 
 export default Search 
