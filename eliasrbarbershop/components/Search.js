@@ -68,6 +68,11 @@ class Search extends React.Component {
             )
         }
     }
+
+    _displayDetailForFilm = (idFilm) => {
+        console.log("Display film with id "+idFilm);
+    }
+
     render() {
         console.log(this.state.isLoading);
         return (
@@ -92,7 +97,7 @@ class Search extends React.Component {
                             this._loadFilms()
                         }
                     }}
-                    renderItem={({ item }) => <FilmItem film={item} />}
+                    renderItem={({ item }) => <FilmItem film={item} displayDetailForFilm={this._displayDetailForFilm}/>}
                 />
                 {this._displayLoading()}
             </View>
