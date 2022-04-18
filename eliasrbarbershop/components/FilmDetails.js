@@ -1,10 +1,11 @@
 // Components/FilmDetail.js
 
-import React from "react";
-import { StyleSheet, View, Text, ActivityIndicator, ScrollView, Image  } from "react-native";
+import React from "react"
+import { StyleSheet, View, Text, ActivityIndicator, ScrollView, Image  } from "react-native"
 import { getFilmDetailFromApi, getImageFromApi } from '../API/TMDB'
 import moment from 'moment'
 import numeral from 'numeral'
+import { connect } from 'react-redux'
 
 class FilmDetail extends React.Component {
 
@@ -63,7 +64,7 @@ class FilmDetail extends React.Component {
     }
 
     render() {
-        const idFilm = this.props.navigation.state.params.idFilm;
+      console.log(this.props)
         return (
             <View style={styles.main_container}>
                 {this._displayFilm()}
@@ -118,5 +119,7 @@ const styles = StyleSheet.create({
     }
   })
   
-
-export default FilmDetail;
+const mapStateToProps = (state) => {
+  return state
+}
+export default connect(mapStateToProps)(FilmDetail)
