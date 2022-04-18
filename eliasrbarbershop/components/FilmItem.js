@@ -7,7 +7,7 @@ import {
   Text, 
   Image, 
   TouchableOpacity } from 'react-native'
-import { getImageFromApi } from '../API/TMDB'
+import { getImageFromApi} from '../API/TMDB'
 
 class FilmItem extends React.Component {
   render() {
