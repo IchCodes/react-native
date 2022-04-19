@@ -22,7 +22,8 @@ class Search extends React.Component {
     this.state = {
       films: [],
       isLoading: false,
-    };
+    }
+    this._loadFilms = this._loadFilms.bind(this )
   }
 
   _searchTextInputChanged(text) {
