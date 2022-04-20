@@ -9,6 +9,7 @@ import {createBottomTabNavigator} from 'react-navigation-tabs'
 import Search from '../components/Search'
 import FilmDetail from '../components/FilmDetails'
 import Favorites from '../components/Favorites'
+import Test from '../components/Test'
 
 const SearchStackNavigation = createStackNavigator({
     Search: {
@@ -57,6 +58,9 @@ const MoviesTabNavigator = createBottomTabNavigator({
                 style={styles.icon}/> // On applique un style pour les redimensionner comme il faut
             }
           }
+    },
+    Test: {
+      screen: Test
     }
 }, {
     tabBarOptions: {
