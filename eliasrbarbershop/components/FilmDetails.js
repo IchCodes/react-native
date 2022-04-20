@@ -23,8 +23,26 @@ class FilmDetail extends React.Component {
     this.state = {
       film: undefined,
       isLoading: false,
-    };
+    }
+    this._shareFilm = this._shareFilm.bind(this)
   }
+
+  static navigationOptions = ({ navigation }) => {
+    const { params } = navigation.state
+    // On accède à la fonction shareFilm et au film via les paramètres qu'on a ajouté à la navigation
+    if (params.film != undefined && Platform.OS === 'ios') {
+      return {
+          // On a besoin d'afficher une image, il faut donc passe par une Touchable une fois de plus
+          headerRight: <TouchableOpacity
+                          style={styles.share_touchable_headerrightbutton}
+                          onPress={() => params.shareFilm()}>
+                          <Image
+                            style={styles.share_image}
+                            source={require('../Images/ic_share.ios.png')} />
+                        </TouchableOpacity>
+      }
+    }
+}
 
   componentDidMount() {
     const favoriteFilmIndex = this.props.favoritesFilm.findIndex(item => item.id === this.props.navigation.state.params.idFilm)
@@ -32,7 +50,7 @@ class FilmDetail extends React.Component {
       // Pas besoin d'appeler l'API ici, on ajoute le détail stocké dans notre state global au state de notre component
       this.setState({
         film: this.props.favoritesFilm[favoriteFilmIndex]
-      })
+      }, () => { this._updateNavigationParams() } )
       return
     }
     // Le film n'est pas dans nos favoris, on n'a pas son détail
@@ -42,7 +60,15 @@ class FilmDetail extends React.Component {
       this.setState({
         film: data,
         isLoading: false
-      })
+      }, () => { this._updateNavigationParams() })
+    })
+  }
+
+   // Fonction pour faire passer la fonction _shareFilm et le film aux paramètres de la navigation. Ainsi on aura accès à ces données au moment de définir le headerRight
+   _updateNavigationParams() {
+    this.props.navigation.setParams({
+      shareFilm: this._shareFilm,
+      film: this.state.film
     })
   }
 
@@ -222,6 +248,9 @@ share_touchable_floatingactionbutton: {
 share_image: {
   width: 30,
   height: 30
+},
+share_touchable_headerrightbutton: {
+  marginRight: 8
 }
 });
 
